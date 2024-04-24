@@ -1,0 +1,26 @@
+document.getElementById('downloadForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var reelsUrl = document.getElementById('reelsUrl').value;
+    if (reelsUrl) {
+        // Send the URL to the backend for processing
+        fetch('/download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: reelsUrl })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display download link to the user
+            if (data.success) {
+                document.getElementById('downloadLink').innerHTML = `<a href="${data.downloadLink}" download>Download Reels Video</a>`;
+            } else {
+                document.getElementById('downloadLink').innerHTML = `<p>${data.message}</p>`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
